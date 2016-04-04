@@ -1,0 +1,16 @@
+{
+  "name": "enomad",
+  "description": "enomad",
+  "version": "0.0.1",
+  "homepage": "http://www.divjak.si",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "jquery": "latest",
+    "bootstrap": "~3.3.6",
+    "font-awesome": "latest",
+    "ionicons" : "latest",
+    "vis" : "latest"
+  }
+}
+
