@@ -14,8 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
+from django.conf.urls import include
 from django.contrib import admin
+from api.urls import router
+from rest_framework.authtoken.views import obtain_auth_token
+from web.views import frontpage
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/v1/token/', obtain_auth_token, name='api-token'),
+    url(r'^api/v1/', include(router.urls)),
+    url(r'^$', frontpage, name='frontpage'),
 ]

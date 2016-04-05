@@ -1,0 +1,26 @@
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav">
+        <span class="sr-only">Toggle Navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/"><i class="fa fa-book"></i> E-Nomad</a>
+    </div> <!-- ./navbar-header -->
+
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="nav navbar-nav pull-right">
+        {% if user.is_authenticated %}
+          <li><a href="/+{{ user.username }}"><i class="fa fa-user"></i> {{ user.first_name }} {{ user.last_name }}</a></li>
+          <li><a href="/+{{ user.username }}/settings"><i class="fa fa-cog"></i> Settings</a></li>
+          <li><a href="#"><i class="fa fa-sign-out"></i> Odjava</a></li>
+        {% else %}
+          <li><a href="/login"><i class="fa fa-sign-in"></i> Prijava</a></li>
+          <li><a href="/register"><i class="fa fa-user-plus"></i> Registracija</a></li>
+        {% endif %}
+      </ul>
+    </div> <!-- /.collapse.navbar-collapse -->
+  </div> <!-- /.container-fluid -->
+</nav>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>E-Nomad</title>
+  <base href="/" />
+  <!-- Stylesheets -->
+  {% include 'sylesheets.html' %}
+
+</head>
+<body>
+  <!-- navbar -->
+  {% include 'navbar.html' %}
+  <div class="container-fluid">
+    <div class="row">
+
+       <!--Menu here-->
+       <div class="hidden-xs col-sm-2 col-md-2 col-lg-2">
+       </div>
+       <!-- Angular app here -->
+       <div ng-view class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
+      </div>
+    </div>
+  </div>
+  <!--Javascripts-->
+  {% include 'javascripts.html' %}
+</body>
+</html>

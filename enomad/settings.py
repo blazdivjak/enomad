@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'api'
+    'api',
+    'web'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -128,3 +129,97 @@ STATICFILES_DIRS = (
     'static/',
     'bower_components/',
 )
+
+#######################################################
+#Django REST framework configuration
+#######################################################
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+}
+
+#######################################################
+#Django REST framework configuration
+#######################################################
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(funcName)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'filters': {
+         'require_debug_false': {
+             '()': 'django.utils.log.RequireDebugFalse',
+         }
+    },
+    'handlers': {
+        'logfile' : {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': '/var/log/enomad/django.log',
+             'formatter': 'verbose',
+        },
+        'sqlfile': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': '/var/log/enomad/sql.log',
+            'formatter': 'simple',
+        },
+        'webpage': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': '/var/log/enomad/webpage.log',
+            'formatter': 'verbose',
+        },
+        'api' : {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': '/var/log/enomad/api.log',
+             'formatter': 'verbose',
+        },
+        'apache_log': {
+            'class': 'logging.StreamHandler',
+            'level': 'ERROR',
+            'formatter': 'verbose',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['logfile', 'apache_log'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        'django.db': {
+            'handlers': ['sqlfile'],
+            'propagate': False,
+                'level': 'INFO',
+        },
+        'webpage': {
+            'handlers': ['webpage'],
+            'propagate': False,
+                'level': 'DEBUG',
+        },
+        'api': {
+            'handlers': ['api'],
+            'propagate': False,
+                'level': 'DEBUG',
+        },
+        'django.request': {
+            'handlers': ['webpage', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    }
+}
