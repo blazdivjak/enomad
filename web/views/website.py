@@ -5,4 +5,4 @@ from django.template import RequestContext
 
 def frontpage(request):
 
-    return render_to_response("index.html", locals(),context_instance=RequestContext(request))
+    return render_to_response("index.html", locals(), context_instance=RequestContext(request))
