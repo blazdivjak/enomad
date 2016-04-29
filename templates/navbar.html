@@ -1,27 +1,20 @@
 {% load staticfiles %}
-<nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav">
-        <span class="sr-only">Toggle Navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/"><img style="margin-top: -15px; width:50px; height: 50px;" src="{% static 'images/enomad_logo.png' %}"></a>
-    </div> <!-- ./navbar-header -->
+<div class="header clearfix">
+<nav>
+  <ul class="nav nav-pills pull-right">
+    <li><a href="http://black2.fri.uni-lj.si/flanker/flanker.apk"><i class="fa fa-android"></i> Prenos aplikacije</a></li>
+    {% if user.is_authenticated %}
+      <li><a href="#"><i class="fa fa-user"></i> {{ user.first_name }} {{ user.last_name }}</a></li>
+      <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Odjava</a></li>
+    {% else %}
+      <li><a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> Prijava</a></li>
+      <li><a href="{% url 'register' %}"><i class="fa fa-user-plus"></i> Registracija</a></li>
+    {% endif %}
 
-    <div class="collapse navbar-collapse" id="nav">
-      <ul class="nav navbar-nav pull-right">
-        {% if user.is_authenticated %}
-          <li><a href="/+{{ user.username }}"><i class="fa fa-user"></i> {{ user.first_name }} {{ user.last_name }}</a></li>
-          <li><a href="/+{{ user.username }}/settings"><i class="fa fa-cog"></i> Settings</a></li>
-          <li><a href="#"><i class="fa fa-sign-out"></i> Odjava</a></li>
-        {% else %}
-          <li><a href="/login"><i class="fa fa-sign-in"></i> Prijava</a></li>
-          <li><a href="/register"><i class="fa fa-user-plus"></i> Registracija</a></li>
-        {% endif %}
-      </ul>
-    </div> <!-- /.collapse.navbar-collapse -->
-  </div> <!-- /.container-fluid -->
+    <!--<li role="presentation" class="active"><a href="#">Home</a></li>
+    <li role="presentation"><a href="#">About</a></li>
+    <li role="presentation"><a href="#">Contact</a></li>-->
+  </ul>
 </nav>
+<h3 class="text-muted"><a class="navbar-brand" href="/"><img style="margin-top: -15px; width:50px; height: 50px;" src="{% static 'images/enomad_logo.png' %}"></a></h3>
+</div>

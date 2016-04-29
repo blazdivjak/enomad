@@ -18,11 +18,17 @@ from django.conf.urls import include
 from django.contrib import admin
 from api.urls import router
 from rest_framework.authtoken.views import obtain_auth_token
-from web.views import frontpage
+from web.views.website import frontpage
+from web.views.authentication import login_user
+from web.views.authentication import logout_user
+from web.views.authentication import register_user
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/v1/token/', obtain_auth_token, name='api-token'),
     url(r'^api/v1/', include(router.urls)),
     url(r'^$', frontpage, name='frontpage'),
+    url(r'^registracija$', register_user, name='register'),
+    url(r'^prijava$', login_user, name='login'),
+    url(r'^odjava$', logout_user, name='logout'),
 ]

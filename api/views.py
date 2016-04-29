@@ -23,13 +23,13 @@ class PointViewSet(DefaultsMixin, LoggingMixin, viewsets.ModelViewSet):
     queryset = Point.objects.filter()
     serializer_class = PointSerializer
     filter_class = PointSerializer
-    ordering_fields = ('id')
+    ordering_fields = ('updated_at', 'created_at')
 
 @permission_classes((permissions.AllowAny, ))
 class WordViewSet(DefaultsMixin, LoggingMixin, viewsets.ModelViewSet):
     queryset = Word.objects.filter()
     serializer_class = WordSerializer
     filter_class = WordSerializer
-    ordering_fields = ('id')
+    ordering_fields = ('updated_at', 'created_at')
 
 

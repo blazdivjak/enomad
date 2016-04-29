@@ -1,0 +1,56 @@
+{% if messages %}
+    {% for message in messages %}
+
+        {% if message.tags == "success"  %}
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+        {% elif message.extra_tags == "form_error" %}
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <p>
+            {{ message }}
+            </p>
+            <br/>
+            {% for form in forms %}
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                        <div class="row">
+                            <div class="col-xs-3 col-md-3 col-lg-3">
+                                {% if field != '__all__' %}
+                                <p>
+                                    <strong>{{ field.label }}:</strong>
+                                </p>
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-6 col-md-6 col-lg-6">
+                                <p>
+                                    {{ error }}
+                                </p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% elif message.tags == "error" %}
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+        {% elif message.extra_tags == "api_error" %}
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
