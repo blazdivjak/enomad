@@ -1,0 +1,40 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$FGajjfE7mYZ0$C+N5dPV9bVvr6RvN0MXoQY1SUE7PoPtndTK0Uhh5pPo=",
+        "last_login": "2016-03-09T08:56:15Z",
+        "is_superuser": true,
+        "username": "blaz",
+        "first_name": "Blaž",
+        "last_name": "Divjak",
+        "email": "blaz@arnes.si",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2014-06-09T13:08:24Z",
+        "groups": [
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "__plain_text_password": "mozina12345",
+    "fields": {
+        "password": "pbkdf2_sha256$24000$D84ZAetryJXF$pBITsxBW9znIgI49nlFfazhtjICLa+dwyVbzzHLrKKY=",
+        "last_login": null,
+        "is_superuser": true,
+        "username": "klemen",
+        "first_name": "Klemen",
+        "last_name": "Mo\u017eina",
+        "email": "km4054@student.uni-lj.si",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2016-04-30T10:58:58Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]
