@@ -14,8 +14,6 @@ import base64
 from lib.utils import read_image_to_base64
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
-#TODO: Models/fixtures with initial data
-
 """
 #TODO: users
 mysql> describe users;

@@ -3,7 +3,7 @@ __author__ = 'blaz'
 
 from django import forms
 
-class Login(forms.Form):
+class LoginForm(forms.Form):
 
     username = forms.CharField(label='Uporabniško ime',
                                required=True,
@@ -13,7 +13,7 @@ class Login(forms.Form):
                                required=True,
                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
-class Registration(forms.Form):
+class RegistrationForm(forms.Form):
 
     username = forms.CharField(label='Uporabniško ime',
                                required=True,

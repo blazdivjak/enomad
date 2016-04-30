@@ -1,0 +1,68 @@
+{% extends "index.html" %}
+{% block breadcrumb %}
+<ol class="breadcrumb">
+  <li><a href="{% url 'frontpage' %}"><span class="glyphicon glyphicon-home"></span></a></li>
+  {% if point_id %}
+  <li><a href="{% url 'frontpage' %}">{{ point.poet }}</a></li>
+  <li class="active">{{ point.address }}</li>
+  {% else %}
+  <li class="active">Dodaj novo lokacijo</li>
+  {% endif %}
+</ol>
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+    <div class="well">
+          {% if point_id %}
+          <form action="{% url 'edit_point' point_id=point_id %}" enctype="multipart/form-data" id="PointForm" method="post">{% csrf_token %}
+          {% else %}
+          <form action="{% url 'add_point' %}" enctype="multipart/form-data" id="PointForm" method="post">{% csrf_token %}
+          {% endif %}
+
+            {% for field in form.visible_fields %}
+
+                {% if field.html_name == 'image' %}
+                    <br/>
+                    {{ field.label_tag }}
+                    <span class="btn btn-default btn-file">
+                        {{ field }}<i class="fa fa-file-image-o"></i> Prebrskaj
+                    </span>
+                {% else %}
+                    {{ field.label_tag }}{{ field }}
+                {% endif %}
+            {% endfor %}
+            <br/>
+            <br/>
+            {% if not point_id %}
+            <button type="submit" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i> Dodaj</button>
+            {% else %}
+            <button type="submit" class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Uredi</button>
+            {% endif  %}
+          </form>
+        </div>
+    </div>
+  <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    {% if point_id %}
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <i class="fa fa-qrcode" aria-hidden="true"></i> QR
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <img style="width: 80px; height:auto;" src="{{ point.qrcode }}">
+        </div>
+    </div>
+    <br/><br/>
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <i class="fa fa-picture-o" aria-hidden="true"></i> Slika
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <img style="width: 80px; height:auto;" src="{{ point.image }}">
+        </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+

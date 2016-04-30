@@ -9,8 +9,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib import messages
-from web.forms.authentication import Login
-from web.forms.authentication import Registration
+from web.forms.authentication import LoginForm
+from web.forms.authentication import RegistrationForm
 from django.contrib.auth.models import User
 # Create your views here.
 
@@ -19,8 +19,6 @@ logger = logging.getLogger('webpage')
 
 def register_user(request):
 
-    #TODO: create user
-
     try:
 
         if request.user.is_authenticated():
@@ -28,39 +26,37 @@ def register_user(request):
 
         if request.method == "GET":
 
-            #TODO: Create form
-            form = Registration()
-
-            pass
+            form = RegistrationForm()
 
         elif request.method == "POST":
 
-            form = Registration(request.POST)
+            form = RegistrationForm(request.POST)
 
             if form.is_valid():
                 user = form.cleaned_data
 
-                logger.debug("Adding user maki")
-
                 if user['password'] == user['repeat_password']:
-                    logger.debug("Saving user maki")
                     u = User(username=user['username'],
                              first_name=user['first_name'],
                              last_name=user['last_name'])
                     u.set_password(user['password'])
                     u.save()
+                    gui_msg = "Registracija uporabnika %s je bila uspesna. Sedaj se lahko prijavite." % (u.username)
+                    messages.success(request, gui_msg)
                     return redirect('frontpage')
                 else:
+                    forms = [form]
                     logger.debug("Passwords dont match")
                     gui_msg = "Gesli se ne ujemata"
                     log_msg = "Passwords don't match"
-                    messages.error(request, gui_msg)
+                    messages.error(request, gui_msg, extra_tags="form_error")
                     logging.error(log_msg)
 
             else:
+                forms = [form]
                 gui_msg = "Napačno uporabniško ime ali geslo"
-                log_msg = "Invalid username or password" % (request.user.username)
-                messages.error(request, gui_msg)
+                log_msg = "Invalid username or password"
+                messages.error(request, gui_msg, extra_tags="form_error")
                 logger.error(log_msg)
 
     except Exception as detail:
@@ -68,7 +64,6 @@ def register_user(request):
 
     return render_to_response("register.html", locals(), context_instance=RequestContext(request))
 
-#TODO: Login Error handling and displaying to user
 def login_user(request):
 
         """
@@ -82,12 +77,12 @@ def login_user(request):
 
             if request.method == "GET":
 
-                form = Login()
+                form = LoginForm()
 
                 forms = [form]
 
             elif request.method == "POST":
-                form = Login(request.POST)
+                form = LoginForm(request.POST)
 
                 if form.is_valid():
                     user = form.cleaned_data
@@ -101,7 +96,7 @@ def login_user(request):
                             return redirect('frontpage')
                 else:
                     gui_msg = "Napačno uporabniško ime ali geslo"
-                    log_msg = "Invalid username or password" % (request.user.username)
+                    log_msg = "Invalid username or password"
                     messages.error(request, gui_msg)
                     logging.error(log_msg)
 

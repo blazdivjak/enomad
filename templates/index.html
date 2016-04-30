@@ -9,6 +9,11 @@
   <!-- navbar -->
   {% include 'navbar.html' %}
   {% endblock %}
+  {% block breadcrumb %}
+  <ol class="breadcrumb">
+      <li><a href="{% url 'frontpage' %}"><span class="glyphicon glyphicon-home"></span></a></li>
+  </ol>
+  {% endblock %}
   {% block error %}
   {% include 'errors.html' %}
   {% endblock %}
@@ -25,7 +30,7 @@
 
         <div class="panel panel-default">
           <div class="panel-body">
-              <a href="#" class="btn btn-primary" role="button"><i class="fa fa-plus-circle" aria-hidden="true"></i> Dodaj novo lokacijo</a>
+              <a href="{% url 'add_point' %}" class="btn btn-primary" role="button"><i class="fa fa-plus-circle" aria-hidden="true"></i> Dodaj novo lokacijo</a>
           </div>
         </div>
 
@@ -34,9 +39,12 @@
         <!--Search box-->
         <input type="search" class="form-control max-width: 80%;" id="input-search" placeholder="Poiščite avtorja">
       </div>
+      {% for point in points %}
+      {% if forloop.counter0|divisibleby:2 %}
+      <!-- row {{ forloop.counter0 }} -->
       <div class="row searchable-container">
-        {% for point in points %}
-         <div class="col-sm-6 col-md-4 col-xs-6 col-lg-6 items">
+      {% endif %}
+         <div class="col-sm-6 col-md-6 col-xs-6 col-lg-6 items">
             <div class="thumbnail">
               {% if point.image %}
               <img src="{{ point.image }}">
@@ -55,7 +63,7 @@
                       <i class="fa fa-eye" aria-hidden="true"></i>
                     </button>
                     {% if request.user.is_staff %}
-                    <a href="#" class="btn btn-primary" role="button"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                    <a href="{% url 'edit_point' point_id=point.id%}" class="btn btn-primary" role="button"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                     {% endif %}
                 </p>
 
@@ -122,9 +130,12 @@
             </div>
           </div>
         </div>
-
-        {% endfor %}
-      </div>
+    {% if forloop.counter|divisibleby:2 %}
+    <!-- end row {{ forloop.counter0 }} -->
+    </div>
+    {% endif %}
+    {% endfor %}
+    </div>
   {% endblock %}
   {% block footer %}
   {% include 'footer.html' %}

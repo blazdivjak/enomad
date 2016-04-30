@@ -26,4 +26,10 @@ bower install
 ```bash
 pip install -r requirements.txt
 ```
+**Create database and initialize data from fixtures**
+```bash
+python manage.py migrate
+python manage.py loaddata initial_data
+python manage.py loaddata initial_points
+```
 

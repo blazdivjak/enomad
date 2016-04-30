@@ -11,5 +11,3 @@ def frontpage(request):
     points = Point.objects.all()
 
     return render_to_response("index.html", locals(), context_instance=RequestContext(request))
-
-#TODO: Display GoogleMaps with points

@@ -22,6 +22,7 @@ from web.views.website import frontpage
 from web.views.authentication import login_user
 from web.views.authentication import logout_user
 from web.views.authentication import register_user
+from web.views.points import edit_point
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -29,6 +30,8 @@ urlpatterns = [
     url(r'^api/v1/', include(router.urls)),
     url(r'^$', frontpage, name='frontpage'),
     url(r'^registracija$', register_user, name='register'),
+    url(r'^tocka/nova$', edit_point, name='add_point'),
+    url(r'^tocka/(?P<point_id>\d+)', edit_point, name='edit_point'),
     url(r'^prijava$', login_user, name='login'),
     url(r'^odjava$', logout_user, name='logout'),
 ]
