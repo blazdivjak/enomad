@@ -31,5 +31,6 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py loaddata initial_users
 python manage.py loaddata initial_points
+python manage.py loaddata initial_words
 ```
 
