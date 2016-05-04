@@ -90,6 +90,7 @@ function checkForNewWords(wordsJSON) {
 	//print(wordsJSON);
 	var nw = wordsJSON[0];
 	var newWord = new Word(nw.word, Number(nw.frequency), Number(nw.point), new Date(nw.updated_at), Number(nw.id));
+	if (lastWordUpdate != null)
 	if (newWord.updated.getTime() != lastWordUpdate.getTime()) {
 		// prisla je nova beseda
 		// prikazi informacije o novi besedi
