@@ -2,7 +2,7 @@ var canvas;
 var words = [];
 var maxfreq = 0;
 var lastWordUpdate;
-var url = 'http://127.0.0.1:8000/api/v1/words/?ordering=-updated_at';
+var url = window.location.href.replace('#','') + 'api/v1/words/?ordering=-updated_at';
 var img;
 var lastPoint;
 var showPoint = false;
@@ -31,7 +31,6 @@ function setup() {
   loadJSON(url, gotInitialWords);
   frameRate(30);
   smooth();
-
 }
 
 function draw() {
@@ -56,6 +55,9 @@ function draw() {
   		fillC = 255;
   	}
   	fill(fillC, alpha);
+  	if (word.y - size < 0) {
+  		word.y -= size;
+  	}
   	text(word.text, word.x, word.y);
   	word.x -= word.speed;
   	// TODO: kaj narediti, ko pridejo besede izven ekrana
@@ -94,7 +96,7 @@ function checkForNewWords(wordsJSON) {
 	if (newWord.updated.getTime() != lastWordUpdate.getTime()) {
 		// prisla je nova beseda
 		// prikazi informacije o novi besedi
-		var urlPoint = 'http://127.0.0.1:8000/api/v1/points/' + newWord.point;
+		var urlPoint = window.location.href.replace('#','') + 'api/v1/points/' + newWord.point;
 		loadJSON(urlPoint, getPointInfo);
 		// ce je beseda ze noter, jo le posodobimo
 		var is_already = false;

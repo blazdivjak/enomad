@@ -1,4 +1,4 @@
-var urlpoints = "http://127.0.0.1:8000/api/v1/points/";
+var urlpoints = window.location.href.replace('#','') + "api/v1/points/";
 var infowindow;
 var googleMap; 
 var JSONdata;
