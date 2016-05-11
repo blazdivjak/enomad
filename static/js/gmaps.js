@@ -17,8 +17,8 @@ function initMap() {
     var mapDiv = document.getElementById('gmap');
     googleMap = new google.maps.Map(mapDiv, {
       center: {lat: 46.057520, lng: 14.507378},
-      zoom: 12,
-      noClear: true
+      zoom: 12
+      //noClear: true
     });
     infowindow = new google.maps.InfoWindow();
     geocoder = new google.maps.Geocoder();

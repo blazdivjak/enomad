@@ -26,14 +26,21 @@ class Word {
 }
 
 function setup() {
-  canvas = createCanvas(600, 400);
-  canvas.style("padding:0;margin:auto;display:block");
-  loadJSON(url, gotInitialWords);
-  frameRate(30);
-  smooth();
+  if ($('#visual').length > 0) {
+    canvas = createCanvas(600, 400);
+    canvas.style("padding:0;margin:auto;display:block;");
+    canvas.parent('visual');
+    loadJSON(url, gotInitialWords);
+    frameRate(30);
+    smooth();
+  } else {
+  	noLoop();
+  	return;
+  }
 }
 
 function draw() {
+  if ($('#visual').length == 0) return;
   background(20);
   strokeWeight(0);
   textFont("Helvetica");

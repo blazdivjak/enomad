@@ -18,10 +18,8 @@
   {% include 'errors.html' %}
   {% endblock %}
   {% block content %}
-      <div class="jumbotron" id="gmap">
-        <h1>Google Maps Here</h1>
-        <p class="lead">Vstavi google maps :)</p>
-        <p><a class="btn btn-lg btn-success" href="#" role="button">TODO</a></p>
+      <div id="visual"></div>
+      <div class="jumbotron" id="gmap" style="height: 400px;margin-top:20px;">
       </div>
 
       <div class="row marketing">
@@ -142,6 +140,8 @@
   <!--Javascripts-->
   {% include 'javascripts.html' %}
   {% endblock %}
+  <!--Project -->
+  <script type="text/javascript" src="static/js/sketch.js"></script>
   </div>
 </body>
 </html>
