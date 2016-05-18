@@ -36,9 +36,9 @@ touch /var/log/enomad/api.log
 chown -R apache:apache /var/log/enomad/
 ```
 
-**Install and configure Apache**
+**Get SSL certificate**
 ```bash
-Get SSL certificate: http://www.arnes.si/storitve/splet-posta-strezniki/digitalna-strezniska-potrdila/
+http://www.arnes.si/storitve/splet-posta-strezniki/digitalna-strezniska-potrdila/
 ```
 **Activate virtual environment**
 ```bash
@@ -62,6 +62,7 @@ python manage.py migrate
 python manage.py loaddata initial_users
 python manage.py loaddata initial_points
 python manage.py loaddata initial_words
+python manage.py collectstatic
 ```
 **Start the service**
 ```bash
