@@ -37,11 +37,16 @@ chown -R apache:apache /var/log/enomad/
 ```
 
 **Install and configure Apache**
-Get SSL certificate.
-
+```bash
+Get SSL certificate: http://www.arnes.si/storitve/splet-posta-strezniki/digitalna-strezniska-potrdila/
+```
 **Activate virtual environment**
 ```bash
 source /opt/virtual_environments/enomad/bin/activate
+```
+**Move to project folder**
+```bash
+cd /opt/django/enomad
 ```
 **Install js dependencies with bower**
 ```bash
@@ -58,11 +63,6 @@ python manage.py loaddata initial_users
 python manage.py loaddata initial_points
 python manage.py loaddata initial_words
 ```
-**Move to project folder**
-```bash
-cd /opt/django/enomad
-```
-
 **Start the service**
 ```bash
 service httpd restart
