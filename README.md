@@ -34,3 +34,22 @@ python manage.py loaddata initial_points
 python manage.py loaddata initial_words
 ```
 
+Deployment on CentOS Apache
+===========================
+**Dependencies **
+```bash
+httpd-devel
+mysql
+mysql-devel
+htop
+mod_wsgi
+libjpeg-turbo-devel
+mod_ssl
+```
+
+
+**Configure **
+```bash
+ln -s /opt/django/enomad/enomad/vhost/black2.fri.uni-lj.si.conf black2.fri.uni-lj.si.conf
+```
+
