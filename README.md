@@ -1,5 +1,5 @@
-E-Nomad project for Interactivity and information vizualization
-==========
+E-Knjižni Nomad project for Interactivity and information vizualization
+=======================================================================
 
 Docs
 ====
@@ -8,7 +8,6 @@ Docs
 httpd-devel
 mysql
 mysql-devel
-htop
 mod_wsgi
 libjpeg-turbo-devel
 mod_ssl
