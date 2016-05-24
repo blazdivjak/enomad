@@ -19,7 +19,13 @@
   {% endblock %}
   {% block content %}
       <div id="visual"></div>
-      <div class="jumbotron" id="gmap" style="height: 400px;margin-top:20px;">
+      <div class="row container">
+         <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 items" id="gmapWrap">
+           <div class="jumbotron" id="gmap" style="height: 400px;margin-top:20px;"></div>
+         </div>      
+      </div>
+      <div class="row container">
+        <div class="col-sm-6 col-md-6 col-xs-6 col-lg-6 items" id="selectedPoint" style="display:none"></div>
       </div>
 
       <div class="row marketing">
@@ -28,7 +34,7 @@
 
         <div class="panel panel-default">
           <div class="panel-body">
-              <a href="{% url 'add_point' %}" class="btn btn-primary" role="button"><i class="fa fa-plus-circle" aria-hidden="true"></i> Dodaj novo lokacijo</a>
+              <a href="{% url 'add_point' %}" id="addButton" class="btn btn-primary" role="button"><i class="fa fa-plus-circle" aria-hidden="true"></i> Dodaj novo lokacijo</a>
           </div>
         </div>
 
