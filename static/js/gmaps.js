@@ -61,7 +61,9 @@ function sendRequestFunction(idxpoint) {
 	});
 }
 function bindInfoWindow(marker, map, infowindow, strDescription, point) {
-	//strDescription += '<IMG  SRC="' + image +'">';
+	var pointImage = "http://placehold.it/350x350";
+	if (point.image !== null) pointImage = point.image;
+	strDescription += '<IMG  SRC="' + pointImage +'">';
     google.maps.event.addListener(marker, 'click', function () {
     	pointToHTML(point);
         infowindow.setContent(strDescription);
