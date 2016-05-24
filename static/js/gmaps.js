@@ -79,7 +79,7 @@ function pointToHTML(point) {
     var addButton = document.getElementById('addButton');
     if (addButton !== null) isStaff = '<a href="tocka/' + point.id + '" class="btn btn-primary" role="button"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 	var contentString = 
-	      '<div class="thumbnail" width="285px" height="335px">' +
+	      '<div class="thumbnail">' +
               '<img src="' + pointImage + '">' + 
               '<div class="caption">' +
                 '<h3><i class="fa fa-user" aria-hidden="true"></i>' + point.poet + '</h3>' +
