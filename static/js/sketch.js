@@ -161,10 +161,11 @@ function showPointInfo(point) {
 	}
 	// sortiraj po pogostosti od manj do najvec
 	pointWords.sort(function(a, b) {
-	    return parseFloat(a.freq) - parseFloat(b.freq);
+	    return parseFloat(b.freq) - parseFloat(a.freq);
 	});
 	fill(255); // pisava
-	for (var i = 0; i < pointWords.length; i++) {
+	var NUMBER_OF_MAX_FREQ = 3;
+	for (var i = 0; i < NUMBER_OF_MAX_FREQ; i++) {
 		var size = map(pointWords[i].freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE);
 		currY += size + 2;
 		textSize(size);
