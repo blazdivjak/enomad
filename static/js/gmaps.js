@@ -18,16 +18,11 @@ function initMap() {
     googleMap = new google.maps.Map(mapDiv, {
       center: {lat: 46.057520, lng: 14.507378},
       zoom: 12
-      //noClear: true
     });
     infowindow = new google.maps.InfoWindow();
     geocoder = new google.maps.Geocoder();
     // konvertitranje naslovov v koordinate
-    
-
     $.getJSON(urlpoints, function( data ) {
-    	console.log(data);
-    	console.log(data.length);
     	JSONdata = data;
     	geocodeDataLoop();
     	
