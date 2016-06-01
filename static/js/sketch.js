@@ -1,6 +1,6 @@
 var canvas;
 var words = [];
-var previousWords = [];
+var wordsToSpawn = [];
 var allWords = [];
 var hiddenWords = [];
 var maxfreq = 0;
@@ -17,6 +17,7 @@ var sizeCoeffY = 1;
 var toDelete;
 var toSpawn;
 var boxAlpha = 0;
+var fadeInCount = 0;
 
 var mode = "normal";
 var fadeInNewWord = false;
@@ -98,7 +99,22 @@ function setup() {
 }
 
 function draw() {
-  if (showPointCount <= 0) showPoint = false;
+  if (showPointCount <= 0) {
+  	showPoint = false;
+  	var bound = MAX_WORDS;
+  	if (words.length < bound) { // dopolni z nakljucnimi
+  		hiddenWords = allWords.diff(words);
+  		if (words.length + hiddenWords.length < MAX_WORDS) bound = words.length + hiddenWords.length;
+  		while (words.length < bound) {
+  			var toAdd = Math.floor(Math.random() * hiddenWords.length);
+  			var w = hiddenWords[toAdd];
+  			w.x = 600;
+  			w.y = random(400);
+  			w.alpha = 255;
+  			words.push(w);
+  		}
+  	}
+  }
   if ($('#visual').length == 0) return;
   background(20);
   strokeWeight(0);
@@ -110,7 +126,7 @@ function draw() {
 	  	// ce imamo prikazane informacije o tocki, ustrezno filtriraj besede
 	  	var word = words[i];
 	  	var size = map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE) * sizeCoeffY;
-	  	var fillC = map(word.freq, 1, maxfreq, 150, 255);
+	  	var fillC = map(word.freq, 1, maxfreq, 170, 255);
 	  	textSize(size);
 	  	fill(fillC, 255);
 	  	if (word.y - size < 0) {
@@ -128,7 +144,19 @@ function draw() {
 	  	hiddenWords = allWords.diff(words);
 	  	if (hiddenWords.length == 0) hiddenWords.push(words[wordOut]);
 	    words.splice(wordOut, 1);
-        toSpawn = hiddenWords[Math.floor(Math.random() * hiddenWords.length)];
+	    var is_already = true;
+	    while (is_already) {
+	    	toSpawn = hiddenWords[Math.floor(Math.random() * hiddenWords.length)];
+	    	var isAllOk = true;
+	    	for (var i = 0; i < words.length; i++) {
+	    		if (words[i].id == toSpawn.id) {
+	    			isAllOk = false;
+	    			break;
+	    		}
+	    	}
+	    	if (isAllOk) is_already = false;
+	    }
+        
 		toSpawn.x = 600 - 15;
 		toSpawn.y = random(400);
 		toSpawn.alpha = 0; // nova beseda ima dodatno animacijo
@@ -153,7 +181,7 @@ function draw() {
    		if (words[i].id == toSpawn.id) continue;
 	  	var word = words[i];
 	  	var size = map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE) * sizeCoeffY;
-	  	var fillC = map(word.freq, 1, maxfreq, 150, 255);
+	  	var fillC = map(word.freq, 1, maxfreq, 170, 255);
 	  	textSize(size);
 	  	fill(fillC, 255);
 	  	if (word.y - size < 0) {
@@ -189,7 +217,7 @@ function draw() {
    	  	// ce imamo prikazane informacije o tocki, ustrezno filtriraj besede
 	  	var word = words[i];
 	  	var size = map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE) * sizeCoeffY;
-	  	var fillC = map(word.freq, 1, maxfreq, 150, 255);
+	  	var fillC = map(word.freq, 1, maxfreq, 170, 255);
 	  	textSize(size);
 	  	
 	  	if (word.y - size < 0) {
@@ -213,6 +241,78 @@ function draw() {
 	  	showPointInfo(lastPoint);
 	  }
 	  if(finished) mode = "normal";
+   }
+   else if (mode === "fadeOutPoet") {
+   	// najprej fadeOut-aj stare besede in spawnaj nove
+   	var allfaded = false;
+   	for (var i = 0; i < words.length; i++) {
+   		// ce imamo prikazane informacije o tocki, ustrezno filtriraj besede
+	  	var word = words[i];
+	  	var size = map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE) * sizeCoeffY;
+	  	var fillC = map(word.freq, 1, maxfreq, 170, 255);
+	  	textSize(size);
+	  	if (word.y - size < 0) {
+	  		word.y += (size - word.y) + 1;
+	  	}
+	  	words[i].alpha -= 5;
+	  	if (words[i].alpha <= 0) {
+	  		deleteWord = true;
+	  		deleteIndex = i;
+	  		fill(0);
+	  		allfaded = true;
+	  	} else {
+	  		fill(fillC, words[i].alpha);
+	  	}
+	  	text(word.text, word.x * sizeCoeffX, word.y * sizeCoeffY);
+	  	word.x -= word.speed;
+	}
+	if (allfaded) {
+		// odstrani trenutne in spawnaj nove, ki so pesnikove
+		words = [];
+		for (var i = 0; i < wordsToSpawn.length; i++) words.push(wordsToSpawn[i]);
+		fadeInCount = 0;
+		mode = "fadeInPoet";
+	}
+   }
+   else if (mode === "fadeInPoet") {
+   	// sedaj fadeIn-aj nove besede in prikaži podatke o pesniku
+   	var finished = false;
+   	for (var i = 0; i < words.length; i++) {
+   		// ce imamo prikazane informacije o tocki, ustrezno filtriraj besede
+	  	var word = words[i];
+	  	var size = map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE) * sizeCoeffY;
+	  	var fillC = map(word.freq, 1, maxfreq, 170, 255);
+	  	textSize(size);
+	  	if (word.y - size < 0) {
+	  		word.y += (size - word.y) + 1;
+	  	}
+	  	if (fadeInCount == 1) { //konec utripanja
+	  		fill(fillC, 255);
+	  		finished = true;
+	  	} 
+	  	else {
+	  		if (fadeInCount % 2 == 0) words[i].alpha += 5;
+	  		else words[i].alpha -= 5;
+	  		if (words[0].alpha <= 0) {
+		  		fill(fillC, 0);
+		  		if(i == 0) fadeInCount++;
+		  	} else if (words[0].alpha >= 255) {
+		  		fill(fillC, 255);
+		  		if(i == 0) fadeInCount++;
+		  	} else {
+		  		fill(fillC, words[i].alpha);
+		  	}
+		}
+	  	text(word.text, word.x * sizeCoeffX, word.y * sizeCoeffY);
+	  	word.x -= word.speed;
+	}
+	
+	if (showPoint && (showPointCount > 0)) {
+	  	showPointInfo(lastPoint);
+	 }
+	 if (finished) {
+		mode = "normal";
+	}
    }
 }   
 
@@ -262,7 +362,7 @@ function checkForNewWords(wordsJSON) {
 		var urlPoint = window.location.href.replace('#','') + 'api/v1/points/' + newWord.point;
 		loadJSON(urlPoint, getPointInfo);
 		// ce je beseda ze noter, jo le posodobimo
-		var is_already = false;
+		/*var is_already = false;
 		for (var i = 0; i < words.length; i++) {
 			var w = words[i];
 			if (w.id === newWord.id) {
@@ -277,41 +377,37 @@ function checkForNewWords(wordsJSON) {
 				mode = "fadeIn"
 				break;
 			}
-		}
+		}*/
 		if (newWord.freq > maxfreq) maxfreq = newWord.freq;
-		if (!is_already) {
-			words.unshift(newWord);
-			toSpawn = newWord;
-			//TODO: tu odstrani obstoječo, če je dosežena omejitev prikazanih in dodaj eno izmed tistih, ki niso (izračunaj razliko množic)
-			if (words.length > MAX_WORDS) {
-				toDelete = words[words.length - 1]; //odstrani najstarejso
-				fadeInNewWord = true;
-				mode = "fadeOut";
-			} else {
-				mode = "fadeIn"
-				fadeInNewWord = true;
-			}
+
+		// dodaj sedaj v seznam le tiste, ki spadajo pod tega pesnika
+		wordsToSpawn = [newWord];
+		var allPoetWords = allWords.filter(function(val) {
+			return (val.point == newWord.point && val.id != newWord.id); // obstojeco ze imamo
+		});
+		var bound = MAX_WORDS;
+		if (allPoetWords.length < MAX_WORDS) bound = allPoetWords.length + 1;
+		while (wordsToSpawn.length < bound) {
+			var toAdd = Math.floor(Math.random() * allPoetWords.length);
+			var w = allPoetWords[toAdd];
+			// resetiramo polozaje besed
+			w.x = 600 - random(300) - 15; //malo jih razmeci
+			w.y = random(400);
+			w.alpha = 0;
+			w.speed = random(1) + 0.01;
+			wordsToSpawn.push(w);
+  			allPoetWords.splice(toAdd, 1);
 		}
+		mode = "fadeOutPoet"; // preklopi v nacin fadeout
 		lastWordUpdate = newWord.updated;	
 	}
 
 }
 
 function getPointInfo(point) {
-	// shrani prejsnje besede v seznam
-/*	previousWords = [];
-	for (var i = 0; i < words.length; i++) {
-		previousWords.push(words[i]);
-	}
-	// dodaj sedaj v seznam le tiste, ki spadajo pod tega pesnika
-	words = [];
-	for (var i = 0; i < allWords.length; i++) {
-
-		words.push(allWords[i]);
-	} */
 	showPoint = true;
 	boxAlpha = 0;
-	showPointCount = 30 * SECONDS_POINT_OPEN;
+	showPointCount = 30 * (SECONDS_POINT_OPEN+2) ;
 	lastPoint = point;
 	var im = point.image;
   	img = loadImage(im);
