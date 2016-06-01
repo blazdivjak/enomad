@@ -4,6 +4,7 @@ var wordsToSpawn = [];
 var allWords = [];
 var hiddenWords = [];
 var maxfreq = 0;
+var triggerWord;
 var lastWordUpdate;
 var url = window.location.href.replace('#','') + 'api/v1/words/?ordering=-updated_at';
 var img;
@@ -28,7 +29,7 @@ var MAX_FONT_SIZE = 32;
 var MIN_FONT_SIZE = 16;
 
 // maksimalno število besed na ekranu naenkrat
-var MAX_WORDS = 5;
+var MAX_WORDS = 6;
 
 // koliko sekund je odprto okno z opisom tocke
 var SECONDS_POINT_OPEN = 10;
@@ -110,6 +111,7 @@ function draw() {
   			var w = hiddenWords[toAdd];
   			w.x = 600;
   			w.y = random(400);
+  			w.y = returnYSpawnLocation(w);
   			w.alpha = 255;
   			words.push(w);
   		}
@@ -159,6 +161,7 @@ function draw() {
         
 		toSpawn.x = 600 - 15;
 		toSpawn.y = random(400);
+		toSpawn.y = returnYSpawnLocation(toSpawn);
 		toSpawn.alpha = 0; // nova beseda ima dodatno animacijo
         toSpawn.speed = random(1) + 0.01;
         words.unshift(toSpawn);
@@ -286,9 +289,8 @@ function draw() {
 	  	if (word.y - size < 0) {
 	  		word.y += (size - word.y) + 1;
 	  	}
-	  	if (fadeInCount == 1) { //konec utripanja
+	  	if (fadeInCount >= 1) { //konec utripanja
 	  		fill(fillC, 255);
-	  		finished = true;
 	  	} 
 	  	else {
 	  		if (fadeInCount % 2 == 0) words[i].alpha += 5;
@@ -302,6 +304,29 @@ function draw() {
 		  	} else {
 		  		fill(fillC, words[i].alpha);
 		  	}
+		}
+		// posebna animacija za to besedo
+		if (word.id == triggerWord.id) {
+			if (fadeInCount == 5) {
+				var fillC = map(word.freq, 1, maxfreq, 170, 255);
+				fill(fillC, 255);
+				finished = true;
+			}	
+			else {
+		  		if (fadeInCount % 2 == 0) words[i].alpha += 15;
+		  		else words[i].alpha -= 15;
+		  		if (words[i].alpha <= 0) {
+			  		fill(252,158,5, 0);
+			  		 fadeInCount++;
+			  	} else if (words[i].alpha >= 255) {
+			  		fill(252,158,5, 255);
+			  		fadeInCount++;
+			  	} else {
+			  		fill(252,158,5, words[i].alpha);
+			  		if (fadeInCount == 4) fill(255, words[i].alpha);
+			  	}
+			}
+
 		}
 	  	text(word.text, word.x * sizeCoeffX, word.y * sizeCoeffY);
 	  	word.x -= word.speed;
@@ -321,7 +346,7 @@ function gotInitialWords(wordsJSON) {
   for (var i = 0; i < wordsJSON.length; i++) {
   	var w = wordsJSON[i];
   	var word = new Word(w.word, Number(w.frequency), Number(w.point), new Date(w.updated_at), Number(w.id));
-  	// TODO: check for y prekrivanje in ustrezno popravi stvari
+  	word.y = returnYSpawnLocation(word);
   	words.push(word);
   	allWords.push(word);
   }
@@ -349,7 +374,8 @@ function checkForNewWords(wordsJSON) {
 	if (lastWordUpdate != null)
 	if (newWord.updated.getTime() != lastWordUpdate.getTime()) {
 		// prisla je nova beseda
-
+		newWord.x = 600 - 100;
+		newWord.y = returnYSpawnLocation(newWord);
 		//posodobi najprej seznam vseh besed
 		allWords = [];
 		for (var i = 0; i < wordsJSON.length; i++) {
@@ -382,6 +408,7 @@ function checkForNewWords(wordsJSON) {
 
 		// dodaj sedaj v seznam le tiste, ki spadajo pod tega pesnika
 		wordsToSpawn = [newWord];
+		triggerWord = newWord;
 		var allPoetWords = allWords.filter(function(val) {
 			return (val.point == newWord.point && val.id != newWord.id); // obstojeco ze imamo
 		});
@@ -391,8 +418,9 @@ function checkForNewWords(wordsJSON) {
 			var toAdd = Math.floor(Math.random() * allPoetWords.length);
 			var w = allPoetWords[toAdd];
 			// resetiramo polozaje besed
-			w.x = 600 - random(300) - 15; //malo jih razmeci
+			w.x = 600 - random(200) - 15; //malo jih razmeci
 			w.y = random(400);
+			w.y = returnYSpawnLocation(w);
 			w.alpha = 0;
 			w.speed = random(1) + 0.01;
 			wordsToSpawn.push(w);
@@ -482,7 +510,7 @@ function showPointInfo(point) {
 	fill(color('#65D3F7'), boxAlpha);
 	translate(currX * sizeCoeffX, 400 * sizeCoeffY);
 	rotate(-PI/2.0);
-	text("E-knjižni nomad", 30 * sizeCoeffX, -4 * sizeCoeffY);
+	text("E-knjižni nomad", 30 * sizeCoeffY, -6 * sizeCoeffX);
 	stroke(60);
 	strokeWeight(1);
 	line(0, -2 * sizeCoeffX, 260 * sizeCoeffY, -2 * sizeCoeffX);
@@ -561,4 +589,56 @@ function restoreLocation(loc) {
     } else {
         $(loc.prev).after(loc.element);
     }
+}
+
+function returnYSpawnLocation(word) {
+	var spawnY = word.y;
+	var upperY = spawnY + map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE);
+	var all_ok = true;
+	// preveri morebitna prekrivanja
+	for (var i = 0; i < words.length; i++) {
+		if (word.id == words[i].id) continue;
+		if ((word.x <= (words[i].x + getWordWidth(words[i])) && word.x >= words[i].x) || (word.x <= words[i].x && ((word.x + getWordWidth(word)) <= (words[i].x + getWordWidth(words[i])))) || word.x == words[i].x || (word.x >= words[i].x && ((word.x + getWordWidth(word)) <= (words[i].x + getWordWidth(words[i])))) || (word.x <= words[i].x && (word.x + getWordWidth(word)) >= (words[i].x + getWordWidth(words[i])))) {
+			if ((spawnY >= words[i].y && upperY <= words[i].y) || (spawnY >= getWordHeigth(words[i]) && (upperY <= getWordHeigth(words[i]))) || (spawnY <= words[i].y && upperY >= getWordHeigth(words[i])) || (spawnY >= words[i].y && upperY <= getWordHeigth(words[i]))) {
+				// prekrivanje
+				all_ok = false;
+				break;
+			}
+		}
+	}
+	if (all_ok) return spawnY;
+	else {
+		var tries = 3;
+		while(tries > 0 && !all_ok) {
+			spawnY = random(400);
+		    upperY = spawnY + map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE);
+		    all_ok = true;
+		    for (var i = 0; i < words.length; i++) {
+				if (word.id == words[i].id) continue;
+				if ((word.x <= (words[i].x + getWordWidth(words[i])) && word.x >= words[i].x) || (word.x <= words[i].x && ((word.x + getWordWidth(word)) <= (words[i].x + getWordWidth(words[i])))) || word.x == words[i].x || (word.x >= words[i].x && ((word.x + getWordWidth(word)) <= (words[i].x + getWordWidth(words[i])))) || (word.x <= words[i].x && (word.x + getWordWidth(word)) >= (words[i].x + getWordWidth(words[i])))) {
+					if ((spawnY >= words[i].y && upperY <= words[i].y) || (spawnY >= getWordHeigth(words[i]) && (upperY <= getWordHeigth(words[i]))) || (spawnY <= words[i].y && upperY >= getWordHeigth(words[i])) || (spawnY >= words[i].y && upperY <= getWordHeigth(words[i]))) {
+					// prekrivanje
+						all_ok = false;
+						break;
+					}
+				}
+			}
+		}
+		if (!all_ok) {
+			word.x += 50; //delajaj besedo, ce res ne gre
+			return spawnY
+		} else {
+			return spawnY;
+		}
+	}
+}
+
+
+function getWordWidth(word) {
+	var size = map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE);
+	textSize(size);
+	return textWidth(word.text);
+}
+function getWordHeigth(word) {
+	return word.y + map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE);
 }
