@@ -29,7 +29,7 @@ var MAX_FONT_SIZE = 32;
 var MIN_FONT_SIZE = 16;
 
 // maksimalno število besed na ekranu naenkrat
-var MAX_WORDS = 6;
+var MAX_WORDS = 10;
 
 // koliko sekund je odprto okno z opisom tocke
 var SECONDS_POINT_OPEN = 10;
@@ -530,7 +530,7 @@ function windowResized() {
 }
 
 
-// POVECAVA OB MIROVANJU MISKE
+/* POVECAVA OB MIROVANJU MISKE
 
 var timeout = null;
 
@@ -571,6 +571,7 @@ $(document).on('mousemove', function() {
 	    
     }, 5000);
 });
+*/
 
 function saveLocation(element) {
     var loc = {};
