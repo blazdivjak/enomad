@@ -98,14 +98,11 @@ function setup() {
 
 function draw() {
   if (showPointCount <= 0) {
-  	console.log("Spawnanih je: " + words.length);
   	showPoint = false;
   	var bound = MAX_WORDS;
   	if (allWords.length < MAX_WORDS) bound = allWords.length;
   	if (words.length < bound) { // dopolni z nakljucnimi
   		hiddenWords = arrayDiff(allWords, words);
-  		console.log("Treba je dodat");
-  		console.log(hiddenWords);
   		if (words.length + hiddenWords.length < MAX_WORDS) bound = words.length + hiddenWords.length;
   		while (words.length < bound) {
   			var toAdd = Math.floor(Math.random() * hiddenWords.length);
@@ -148,13 +145,11 @@ function draw() {
 	  	hiddenWords = arrayDiff(allWords, words);
 	  	if (hiddenWords.length == 0) hiddenWords.push(words[wordOut]);
 	    words.splice(wordOut, 1);
-	    console.log(words);
 	    var is_already = true;
 	    var tries = 0;
 	    var max_tries = MAX_WORDS * 5;
 	    while (is_already && tries < max_tries) {
 	    	tries++;
-	    	console.log("Iscem besedo za spawn");
 	    	toSpawn = hiddenWords[Math.floor(Math.random() * hiddenWords.length)];
 	    	var isAllOk = true;
 	    	for (var i = 0; i < words.length; i++) {
@@ -356,11 +351,9 @@ function draw() {
 	    if ((word.x + textWidth(word.text)) < 0) {
 	    	words.splice(i, 1);
 	    	i--;
-	    	console.log("Varnostno odstranjevanje");
   			var bound = MAX_WORDS;
 		  	if (words.length < bound) { // dopolni z nakljucnimi
 		  		hiddenWords = arrayDiff(allWords, words);
-		  		console.log(hiddenWords);
 		  		if (words.length + hiddenWords.length < MAX_WORDS) bound = words.length + hiddenWords.length;
 		  		while (words.length < bound) {
 		  			var toAdd = Math.floor(Math.random() * hiddenWords.length);
@@ -646,7 +639,7 @@ function returnYSpawnLocation(word) {
 	if (all_ok) return spawnY;
 	else {
 		var tries = 3;
-		while(tries > 0 && !all_ok) {
+		while(tries >= 0 && !all_ok) {
 			spawnY = random(400);
 		    upperY = spawnY + map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE);
 		    all_ok = true;
@@ -660,6 +653,7 @@ function returnYSpawnLocation(word) {
 					}
 				}
 			}
+			tries--;
 		}
 		if (!all_ok) {
 			word.x += 50; //delajaj besedo, ce res ne gre
