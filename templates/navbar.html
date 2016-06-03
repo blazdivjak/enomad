@@ -15,7 +15,7 @@
     <div class="collapse navbar-collapse" id="laboratory-nav">
       <ul class="nav navbar-nav pull-right">
         <li><a href="" data-toggle="modal" data-target="#about"><i class="fa fa-info-circle" aria-hidden="true"></i> O projektu</a></li>
-        <li><a href="http://black2.fri.uni-lj.si/flanker/flanker.apk"><i class="fa fa-android"></i> Prenos aplikacije</a></li>
+        <li><a href="{% static  'Flanker.apk' %}"><i class="fa fa-android"></i> Prenos aplikacije</a></li>
         {% if user.is_authenticated %}
           <li><a href="#"><i class="fa fa-user"></i> {{ user.first_name }} {{ user.last_name }}</a></li>
           <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Odjava</a></li>
