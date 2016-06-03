@@ -35,9 +35,6 @@ var MAX_WORDS = 10;
 var SECONDS_POINT_OPEN = 10;
 
 
-Array.prototype.diff = function(a) {
-    return this.filter(function(i) {return a.indexOf(i) < 0;});
-};
 
 class Word {
 	constructor(text, freq, point, updated, id) {
@@ -101,10 +98,14 @@ function setup() {
 
 function draw() {
   if (showPointCount <= 0) {
+  	console.log("Spawnanih je: " + words.length);
   	showPoint = false;
   	var bound = MAX_WORDS;
+  	if (allWords.length < MAX_WORDS) bound = allWords.length;
   	if (words.length < bound) { // dopolni z nakljucnimi
-  		hiddenWords = allWords.diff(words);
+  		hiddenWords = arrayDiff(allWords, words);
+  		console.log("Treba je dodat");
+  		console.log(hiddenWords);
   		if (words.length + hiddenWords.length < MAX_WORDS) bound = words.length + hiddenWords.length;
   		while (words.length < bound) {
   			var toAdd = Math.floor(Math.random() * hiddenWords.length);
@@ -112,6 +113,7 @@ function draw() {
   			w.x = 600;
   			w.y = random(400);
   			w.y = returnYSpawnLocation(w);
+  			w.speed = random(1);
   			w.alpha = 255;
   			words.push(w);
   		}
@@ -143,11 +145,16 @@ function draw() {
 
 	  }
 	  if (wordOut >= 0) {
-	  	hiddenWords = allWords.diff(words);
+	  	hiddenWords = arrayDiff(allWords, words);
 	  	if (hiddenWords.length == 0) hiddenWords.push(words[wordOut]);
 	    words.splice(wordOut, 1);
+	    console.log(words);
 	    var is_already = true;
-	    while (is_already) {
+	    var tries = 0;
+	    var max_tries = MAX_WORDS * 5;
+	    while (is_already && tries < max_tries) {
+	    	tries++;
+	    	console.log("Iscem besedo za spawn");
 	    	toSpawn = hiddenWords[Math.floor(Math.random() * hiddenWords.length)];
 	    	var isAllOk = true;
 	    	for (var i = 0; i < words.length; i++) {
@@ -158,15 +165,16 @@ function draw() {
 	    	}
 	    	if (isAllOk) is_already = false;
 	    }
-        
-		toSpawn.x = 600 - 15;
-		toSpawn.y = random(400);
-		toSpawn.y = returnYSpawnLocation(toSpawn);
-		toSpawn.alpha = 0; // nova beseda ima dodatno animacijo
-        toSpawn.speed = random(1) + 0.01;
-        words.unshift(toSpawn);
-        fadeInNewWord = false;
-        mode = "fadeIn";
+        if (!is_already) {
+			toSpawn.x = 600 - 15;
+			toSpawn.y = random(400);
+			toSpawn.y = returnYSpawnLocation(toSpawn);
+			toSpawn.alpha = 0; // nova beseda ima dodatno animacijo
+	        toSpawn.speed = random(1) + 0.01;
+	        words.unshift(toSpawn);
+	        fadeInNewWord = false;
+	        mode = "fadeIn";
+	    }
 	  }
 	  else {
 		  // preveri za novo besedo
@@ -332,6 +340,7 @@ function draw() {
 	  	word.x -= word.speed;
 	}
 	
+	
 	if (showPoint && (showPointCount > 0)) {
 	  	showPointInfo(lastPoint);
 	 }
@@ -339,6 +348,33 @@ function draw() {
 		mode = "normal";
 	}
    }
+   // varnostno preverjanje
+  	for (var i = 0; i < words.length; i++) {
+  		var word = words[i];
+  		var size = map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE) * sizeCoeffY;
+		textSize(size);
+	    if ((word.x + textWidth(word.text)) < 0) {
+	    	words.splice(i, 1);
+	    	i--;
+	    	console.log("Varnostno odstranjevanje");
+  			var bound = MAX_WORDS;
+		  	if (words.length < bound) { // dopolni z nakljucnimi
+		  		hiddenWords = arrayDiff(allWords, words);
+		  		console.log(hiddenWords);
+		  		if (words.length + hiddenWords.length < MAX_WORDS) bound = words.length + hiddenWords.length;
+		  		while (words.length < bound) {
+		  			var toAdd = Math.floor(Math.random() * hiddenWords.length);
+		  			var w = hiddenWords[toAdd];
+		  			w.x = 600;
+		  			w.y = random(400);
+		  			w.y = returnYSpawnLocation(w);
+		  			w.speed = random(1);
+		  			w.alpha = 255;
+		  			words.push(w);
+		  		}
+  			}
+	    }
+  	}
 }   
 
 function gotInitialWords(wordsJSON) {
@@ -642,4 +678,36 @@ function getWordWidth(word) {
 }
 function getWordHeigth(word) {
 	return word.y + map(word.freq, 1, maxfreq, MIN_FONT_SIZE, MAX_FONT_SIZE);
+}
+
+function arrayDiff(a, b) {
+	var onlyInA = a.filter(function(current){
+    return b.filter(function(current_b){
+	        return current_b.id == current.id
+	    }).length == 0
+	});
+
+	var onlyInB = b.filter(function(current){
+	    return a.filter(function(current_a){
+	        return current_a.id == current.id
+	    }).length == 0
+	});
+
+	result = onlyInA.concat(onlyInB);
+	return result;
+}
+function eliminateDuplicates(arr) {
+  arr.sort( function( a, b){ return a.id - b.id; } );
+
+// delete all duplicates from the array
+for( var i=0; i<arr.length-1; i++ ) {
+  if ( arr[i].id == arr[i+1].id ) {
+    delete arr[i];
+  }
+}
+
+// remove the "undefined entries"
+arr = arr.filter( function( el ){ return (typeof el !== "undefined"); } );
+return arr;
+  
 }
