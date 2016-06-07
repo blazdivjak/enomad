@@ -6,7 +6,7 @@ var hiddenWords = [];
 var maxfreq = 0;
 var triggerWord;
 var lastWordUpdate;
-var url = window.location.href.replace('#','') + 'api/v1/words/?ordering=-updated_at';
+var url = window.location.href.replace('#','') + '/api/v1/words/?ordering=-updated_at';
 var img;
 var lastPoint;
 var showPoint = false;
