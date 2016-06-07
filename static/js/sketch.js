@@ -178,7 +178,6 @@ function draw() {
 		  if (loopCounter >= 30) {
 		  	loadJSON(url, checkForNewWords);
 		  	loopCounter = 0;
-		  	console.log("Reset loop");
 		  }
 	  }
 	  if (showPoint && (showPointCount > 0)) {
