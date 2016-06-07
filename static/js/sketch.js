@@ -19,6 +19,7 @@ var toDelete;
 var toSpawn;
 var boxAlpha = 0;
 var fadeInCount = 0;
+var loopCounter = 0;
 
 var mode = "normal";
 var fadeInNewWord = false;
@@ -113,6 +114,7 @@ function draw() {
   			w.speed = random(1);
   			w.alpha = 255;
   			words.push(w);
+  			hiddenWords.splice(toAdd, 1);
   		}
   	}
   }
@@ -173,7 +175,11 @@ function draw() {
 	  }
 	  else {
 		  // preveri za novo besedo
-		  loadJSON(url, checkForNewWords);
+		  if (loopCounter >= 30) {
+		  	loadJSON(url, checkForNewWords);
+		  	loopCounter = 0;
+		  	console.log("Reset loop");
+		  }
 	  }
 	  if (showPoint && (showPointCount > 0)) {
 	  	showPointInfo(lastPoint);
@@ -368,6 +374,7 @@ function draw() {
   			}
 	    }
   	}
+  	loopCounter++;
 }   
 
 function gotInitialWords(wordsJSON) {
